@@ -1,0 +1,15 @@
+# Python - pliki tymczasowe i skompilowane
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ANTLR - pliki generowane (zazwyczaj nie chcemy ich w repo, bo każdy może je wygenerować u siebie)
+*.tokens
+*.interp
+
+# Środowisko wirtualne (jeśli używasz)
+venv/
+.venv/
+
+# Pliki IDE (PyCharm)
+.idea/
