@@ -26,6 +26,15 @@ class SpacialTurtleListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by SpacialTurtleParser#faceStatement.
+    def enterFaceStatement(self, ctx:SpacialTurtleParser.FaceStatementContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#faceStatement.
+    def exitFaceStatement(self, ctx:SpacialTurtleParser.FaceStatementContext):
+        pass
+
+
     # Enter a parse tree produced by SpacialTurtleParser#command.
     def enterCommand(self, ctx:SpacialTurtleParser.CommandContext):
         pass
@@ -80,21 +89,192 @@ class SpacialTurtleListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by SpacialTurtleParser#letInstr.
-    def enterLetInstr(self, ctx:SpacialTurtleParser.LetInstrContext):
+    # Enter a parse tree produced by SpacialTurtleParser#declaration.
+    def enterDeclaration(self, ctx:SpacialTurtleParser.DeclarationContext):
         pass
 
-    # Exit a parse tree produced by SpacialTurtleParser#letInstr.
-    def exitLetInstr(self, ctx:SpacialTurtleParser.LetInstrContext):
+    # Exit a parse tree produced by SpacialTurtleParser#declaration.
+    def exitDeclaration(self, ctx:SpacialTurtleParser.DeclarationContext):
         pass
 
 
-    # Enter a parse tree produced by SpacialTurtleParser#value.
-    def enterValue(self, ctx:SpacialTurtleParser.ValueContext):
+    # Enter a parse tree produced by SpacialTurtleParser#varType.
+    def enterVarType(self, ctx:SpacialTurtleParser.VarTypeContext):
         pass
 
-    # Exit a parse tree produced by SpacialTurtleParser#value.
-    def exitValue(self, ctx:SpacialTurtleParser.ValueContext):
+    # Exit a parse tree produced by SpacialTurtleParser#varType.
+    def exitVarType(self, ctx:SpacialTurtleParser.VarTypeContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#assignStmt.
+    def enterAssignStmt(self, ctx:SpacialTurtleParser.AssignStmtContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#assignStmt.
+    def exitAssignStmt(self, ctx:SpacialTurtleParser.AssignStmtContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#exprStmt.
+    def enterExprStmt(self, ctx:SpacialTurtleParser.ExprStmtContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#exprStmt.
+    def exitExprStmt(self, ctx:SpacialTurtleParser.ExprStmtContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#block.
+    def enterBlock(self, ctx:SpacialTurtleParser.BlockContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#block.
+    def exitBlock(self, ctx:SpacialTurtleParser.BlockContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#ifStmt.
+    def enterIfStmt(self, ctx:SpacialTurtleParser.IfStmtContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#ifStmt.
+    def exitIfStmt(self, ctx:SpacialTurtleParser.IfStmtContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#whileStmt.
+    def enterWhileStmt(self, ctx:SpacialTurtleParser.WhileStmtContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#whileStmt.
+    def exitWhileStmt(self, ctx:SpacialTurtleParser.WhileStmtContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#forStmt.
+    def enterForStmt(self, ctx:SpacialTurtleParser.ForStmtContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#forStmt.
+    def exitForStmt(self, ctx:SpacialTurtleParser.ForStmtContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#funcDef.
+    def enterFuncDef(self, ctx:SpacialTurtleParser.FuncDefContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#funcDef.
+    def exitFuncDef(self, ctx:SpacialTurtleParser.FuncDefContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#returnStmt.
+    def enterReturnStmt(self, ctx:SpacialTurtleParser.ReturnStmtContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#returnStmt.
+    def exitReturnStmt(self, ctx:SpacialTurtleParser.ReturnStmtContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#paramList.
+    def enterParamList(self, ctx:SpacialTurtleParser.ParamListContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#paramList.
+    def exitParamList(self, ctx:SpacialTurtleParser.ParamListContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#variableRef.
+    def enterVariableRef(self, ctx:SpacialTurtleParser.VariableRefContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#variableRef.
+    def exitVariableRef(self, ctx:SpacialTurtleParser.VariableRefContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#printStmt.
+    def enterPrintStmt(self, ctx:SpacialTurtleParser.PrintStmtContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#printStmt.
+    def exitPrintStmt(self, ctx:SpacialTurtleParser.PrintStmtContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#expr.
+    def enterExpr(self, ctx:SpacialTurtleParser.ExprContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#expr.
+    def exitExpr(self, ctx:SpacialTurtleParser.ExprContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#logicalExpr.
+    def enterLogicalExpr(self, ctx:SpacialTurtleParser.LogicalExprContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#logicalExpr.
+    def exitLogicalExpr(self, ctx:SpacialTurtleParser.LogicalExprContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#comparisonExpr.
+    def enterComparisonExpr(self, ctx:SpacialTurtleParser.ComparisonExprContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#comparisonExpr.
+    def exitComparisonExpr(self, ctx:SpacialTurtleParser.ComparisonExprContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#additiveExpr.
+    def enterAdditiveExpr(self, ctx:SpacialTurtleParser.AdditiveExprContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#additiveExpr.
+    def exitAdditiveExpr(self, ctx:SpacialTurtleParser.AdditiveExprContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#multiplicativeExpr.
+    def enterMultiplicativeExpr(self, ctx:SpacialTurtleParser.MultiplicativeExprContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#multiplicativeExpr.
+    def exitMultiplicativeExpr(self, ctx:SpacialTurtleParser.MultiplicativeExprContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#unaryExpr.
+    def enterUnaryExpr(self, ctx:SpacialTurtleParser.UnaryExprContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#unaryExpr.
+    def exitUnaryExpr(self, ctx:SpacialTurtleParser.UnaryExprContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#primaryExpr.
+    def enterPrimaryExpr(self, ctx:SpacialTurtleParser.PrimaryExprContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#primaryExpr.
+    def exitPrimaryExpr(self, ctx:SpacialTurtleParser.PrimaryExprContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#funcCall.
+    def enterFuncCall(self, ctx:SpacialTurtleParser.FuncCallContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#funcCall.
+    def exitFuncCall(self, ctx:SpacialTurtleParser.FuncCallContext):
         pass
 
 
