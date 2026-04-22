@@ -47,6 +47,7 @@ for (int i = 0; i < 4; i = i + 1) {
     parent::walls_drawn = parent::walls_drawn + 1
 }
 export
+```
 
 ## Requirements
 
