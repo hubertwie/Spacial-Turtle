@@ -61,6 +61,8 @@ class FirstPassListener(ParseTreeListener):
             var_type = Type.FLOAT
         elif type_str == 'bool':
             var_type = Type.BOOL
+        elif type_str == 'string':
+            var_type = Type.STRING
         else:
             var_type = Type.FLOAT
 

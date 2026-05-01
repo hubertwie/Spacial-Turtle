@@ -58,7 +58,7 @@ exportCmd : EXPORT ;
 
 declaration : varType ID ('=' expr)? ;
 
-varType : INT_K | FLOAT_K | BOOL_K ;
+varType : INT_K | FLOAT_K | BOOL_K | STRING_K ;
 
 assignStmt : variableRef '=' expr ;
 
@@ -80,11 +80,13 @@ variableRef
     | ID
     ;
 
-printStmt : PRINT expr ;
+printStmt : PRINT '(' (expr (',' expr)*)? ')' ;
 
-expr : logicalExpr ;
+expr : logicalOrExpr ;
 
-logicalExpr : comparisonExpr ( (AND | OR) comparisonExpr )* ;
+logicalOrExpr : logicalAndExpr ( OR logicalAndExpr )* ;
+
+logicalAndExpr : comparisonExpr ( AND comparisonExpr )* ;
 
 comparisonExpr
     : additiveExpr ( (EQ | NEQ | LT | GT | LE | GE) additiveExpr )?
@@ -108,6 +110,7 @@ primaryExpr
     | variableRef
     | TRUE
     | FALSE
+    | STRING
     | LPAREN expr RPAREN
     | funcCall
     | varType '(' expr ')'
@@ -133,6 +136,7 @@ PARENT  : 'parent';
 INT_K   : 'int';
 FLOAT_K : 'float';
 BOOL_K  : 'bool';
+STRING_K : 'string';
 
 IF    : 'if';
 ELSE  : 'else';
@@ -163,3 +167,4 @@ ID : [a-zA-Z_][a-zA-Z_0-9]*;
 NUMBER : '-'? [0-9]+ ('.' [0-9]+)?;
 COMMENT : '#' ~[\r\n]* -> skip;
 WS : [ \t\r\n]+ -> skip;
+STRING : '"' ~["\r\n]* '"' ;

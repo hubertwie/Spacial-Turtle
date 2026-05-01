@@ -151,19 +151,24 @@ class SpacialTurtleInterpreter(SpacialTurtleVisitor):
         return typ in [Type.INT, Type.FLOAT]
 
     def visitExpr(self, ctx):
-        return self.visit(ctx.logicalExpr())
+        return self.visit(ctx.logicalOrExpr())
 
-    def visitLogicalExpr(self, ctx):
+    def visitLogicalOrExpr(self, ctx):
+        left_val, left_type = self.visit(ctx.logicalAndExpr(0))
+        for i in range(1, len(ctx.logicalAndExpr())):
+            right_val, right_type = self.visit(ctx.logicalAndExpr(i))
+            if left_type != Type.BOOL or right_type != Type.BOOL:
+                self.error(ctx, "Operator 'or' wymaga typów bool!")
+            left_val = left_val or right_val
+        return left_val, left_type
+
+    def visitLogicalAndExpr(self, ctx):
         left_val, left_type = self.visit(ctx.comparisonExpr(0))
         for i in range(1, len(ctx.comparisonExpr())):
-            op = ctx.getChild(2 * i - 1).getText()
             right_val, right_type = self.visit(ctx.comparisonExpr(i))
             if left_type != Type.BOOL or right_type != Type.BOOL:
-                self.error(ctx, "Operatory 'and'/'or' wymagają typów bool!")
-            if op == 'and':
-                left_val = left_val and right_val
-            else:
-                left_val = left_val or right_val
+                self.error(ctx, "Operator 'and' wymaga typów bool!")
+            left_val = left_val and right_val
         return left_val, left_type
 
     def visitComparisonExpr(self, ctx):
@@ -217,14 +222,19 @@ class SpacialTurtleInterpreter(SpacialTurtleVisitor):
 
             if op == '*':
                 val *= right_val
+                if typ == Type.FLOAT or right_type == Type.FLOAT:
+                    typ = Type.FLOAT
+                else:
+                    typ = Type.INT
             else:
                 if right_val == 0: self.error(ctx, "Dzielenie przez zero!")
-                val /= right_val
-
-            if typ == Type.FLOAT or right_type == Type.FLOAT or op == '/':
-                typ = Type.FLOAT
-            else:
-                typ = Type.INT
+                
+                if typ == Type.INT and right_type == Type.INT:
+                    val //= right_val
+                    typ = Type.INT
+                else:
+                    val /= right_val
+                    typ = Type.FLOAT
         return val, typ
 
     def visitUnaryExpr(self, ctx):
@@ -243,6 +253,8 @@ class SpacialTurtleInterpreter(SpacialTurtleVisitor):
         return self.visit(ctx.primaryExpr())
 
     def visitPrimaryExpr(self, ctx):
+        if ctx.STRING():
+            return ctx.STRING().getText()[1:-1], Type.STRING
         if ctx.NUMBER():
             txt = ctx.NUMBER().getText()
             if '.' in txt:
@@ -260,7 +272,6 @@ class SpacialTurtleInterpreter(SpacialTurtleVisitor):
         if ctx.funcCall():
             return self.visitFuncCall(ctx.funcCall())
         if ctx.varType():
-            # Rzutowanie typów
             val, typ = self.visit(ctx.expr())
             target_type_str = ctx.varType().getText()
             if target_type_str == 'int':
@@ -349,8 +360,16 @@ class SpacialTurtleInterpreter(SpacialTurtleVisitor):
         print("Wyeksportowano do output.obj")
 
     def visitPrintStmt(self, ctx):
-        val, typ = self.visit(ctx.expr())
-        print(val)
+        args = []
+        if ctx.expr():
+            for expr_ctx in ctx.expr():
+                val, typ = self.visit(expr_ctx)
+                
+                if typ == Type.BOOL:
+                    val = "true" if val else "false"
+                args.append(str(val))
+                
+        print(" ".join(args))
         self.ui_step()
 
     def visitBlock(self, ctx):
@@ -470,59 +489,64 @@ class TurtleVisualization(tk.Tk):
         control_frame = ttk.Frame(self)
         control_frame.pack(fill=tk.X, padx=5, pady=5)
 
+        # ========== RAMKA KAMERY (siatka 4 kolumn) ==========
         camera_frame = ttk.LabelFrame(control_frame, text="Camera", padding=5)
-        camera_frame.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=2)
+        camera_frame.pack(side=tk.TOP, fill=tk.X, pady=2)
 
-        ttk.Button(camera_frame, text="Rotate Left",
-                   command=lambda: self.rotate_camera(0, -10)).pack(side=tk.LEFT, padx=2)
-        ttk.Button(camera_frame, text="Rotate Right",
-                   command=lambda: self.rotate_camera(0, 10)).pack(side=tk.LEFT, padx=2)
-        ttk.Button(camera_frame, text="Rotate Up",
-                   command=lambda: self.rotate_camera(10, 0)).pack(side=tk.LEFT, padx=2)
-        ttk.Button(camera_frame, text="Rotate Down",
-                   command=lambda: self.rotate_camera(-10, 0)).pack(side=tk.LEFT, padx=2)
+        buttons = [
+            ("Rotate Left", lambda: self.rotate_camera(0, -10)),
+            ("Rotate Right", lambda: self.rotate_camera(0, 10)),
+            ("Rotate Up", lambda: self.rotate_camera(10, 0)),
+            ("Rotate Down", lambda: self.rotate_camera(-10, 0)),
+            ("Roll Left", lambda: self.roll_camera(-10)),
+            ("Roll Right", lambda: self.roll_camera(10)),
+            ("Zoom In", lambda: self.zoom_camera(-0.5)),
+            ("Zoom Out", lambda: self.zoom_camera(0.5)),
+            ("Pan Left", lambda: self.pan_camera(-20, 0)),
+            ("Pan Right", lambda: self.pan_camera(20, 0)),
+            ("Pan Up", lambda: self.pan_camera(0, -20)),
+            ("Pan Down", lambda: self.pan_camera(0, 20)),
+            ("Reset View", self.reset_camera),
+            ("Cam: World", self.toggle_camera_mode),
+        ]
 
-        ttk.Button(camera_frame, text="Roll Left",
-                   command=lambda: self.roll_camera(-10)).pack(side=tk.LEFT, padx=2)
-        ttk.Button(camera_frame, text="Roll Right",
-                   command=lambda: self.roll_camera(10)).pack(side=tk.LEFT, padx=2)
+        row, col = 0, 0
+        for text, cmd in buttons:
+            btn = ttk.Button(camera_frame, text=text, command=cmd)
+            btn.grid(row=row, column=col, padx=2, pady=2, sticky="ew")
+            if text == "Cam: World":
+                self.cam_mode_btn = btn   # ← ZAPAMIĘTUJEMY PRZYCISK
+            col += 1
+            if col >= 4:
+                col = 0
+                row += 1
+        for i in range(4):
+            camera_frame.columnconfigure(i, weight=1)
 
-        ttk.Button(camera_frame, text="Zoom In",
-                   command=lambda: self.zoom_camera(-0.5)).pack(side=tk.LEFT, padx=2)
-        ttk.Button(camera_frame, text="Zoom Out",
-                   command=lambda: self.zoom_camera(0.5)).pack(side=tk.LEFT, padx=2)
-
-        ttk.Button(camera_frame, text="Pan Left",
-                   command=lambda: self.pan_camera(-20, 0)).pack(side=tk.LEFT, padx=2)
-        ttk.Button(camera_frame, text="Pan Right",
-                   command=lambda: self.pan_camera(20, 0)).pack(side=tk.LEFT, padx=2)
-        ttk.Button(camera_frame, text="Pan Up",
-                   command=lambda: self.pan_camera(0, -20)).pack(side=tk.LEFT, padx=2)
-        ttk.Button(camera_frame, text="Pan Down",
-                   command=lambda: self.pan_camera(0, 20)).pack(side=tk.LEFT, padx=2)
-
-        ttk.Button(camera_frame, text="Reset View",
-                   command=self.reset_camera).pack(side=tk.LEFT, padx=2)
-
-        self.cam_mode_btn = ttk.Button(camera_frame, text="Cam: World",
-                                        command=self.toggle_camera_mode)
-        self.cam_mode_btn.pack(side=tk.LEFT, padx=2)
-
+        # ========== RAMKA ANIMACJI (trzy rzędy) ==========
         anim_frame = ttk.LabelFrame(control_frame, text="Animation", padding=5)
-        anim_frame.pack(side=tk.LEFT, fill=tk.X, padx=2)
+        anim_frame.pack(side=tk.TOP, fill=tk.X, pady=2)
 
-        ttk.Button(anim_frame, text="▶ Play", command=self.start_animation).pack(side=tk.LEFT, padx=2)
-        ttk.Button(anim_frame, text="⏸ Pause", command=self.stop_animation).pack(side=tk.LEFT, padx=2)
-        ttk.Button(anim_frame, text="⏩ Step", command=self.step_animation).pack(side=tk.LEFT, padx=2)
+        # Rząd 1: przyciski sterujące
+        btn_frame = ttk.Frame(anim_frame)
+        btn_frame.pack(fill=tk.X, pady=2)
+        ttk.Button(btn_frame, text="▶ Play", command=self.start_animation).pack(side=tk.LEFT, padx=2)
+        ttk.Button(btn_frame, text="⏸ Pause", command=self.stop_animation).pack(side=tk.LEFT, padx=2)
+        ttk.Button(btn_frame, text="⏩ Step", command=self.step_animation).pack(side=tk.LEFT, padx=2)
 
-        ttk.Label(anim_frame, text="Speed (ms):").pack(side=tk.LEFT, padx=(10,2))
-        self.speed_scale = ttk.Scale(anim_frame, from_=50, to=500, orient=tk.HORIZONTAL,
-                                      command=self.set_delay, length=100)
+        # Rząd 2: suwak szybkości
+        speed_frame = ttk.Frame(anim_frame)
+        speed_frame.pack(fill=tk.X, pady=2)
+        ttk.Label(speed_frame, text="Speed (ms):").pack(side=tk.LEFT, padx=(10,2))
+        self.speed_scale = ttk.Scale(speed_frame, from_=50, to=500, orient=tk.HORIZONTAL,
+                                    command=self.set_delay, length=100)
         self.speed_scale.set(200)
         self.speed_scale.pack(side=tk.LEFT, padx=2)
 
-        ttk.Button(control_frame, text="Export OBJ",
-                   command=self.export_obj).pack(side=tk.RIGHT, padx=2)
+        # Rząd 3: przycisk eksportu
+        export_frame = ttk.Frame(anim_frame)
+        export_frame.pack(fill=tk.X, pady=2)
+        ttk.Button(export_frame, text="Export OBJ", command=self.export_obj).pack(side=tk.RIGHT, padx=2)
 
         self.status = ttk.Label(self, text="Ready", relief=tk.SUNKEN)
         self.status.pack(fill=tk.X, side=tk.BOTTOM)
@@ -645,7 +669,11 @@ class TurtleVisualization(tk.Tk):
         z3 = -x2 * sin_y + z2 * cos_y
         y3 = y2
 
-        scale = 300 / (self.camera_distance + z3)
+        denominator = self.camera_distance + z3
+        if abs(denominator) < 1e-6:
+            denominator = 1e-6 if denominator >= 0 else -1e-6
+
+        scale = 300 / denominator
         screen_x = 400 + x3 * scale + self.pan_x
         screen_y = 300 - y3 * scale + self.pan_y
         return (screen_x, screen_y)

@@ -215,12 +215,21 @@ class SpacialTurtleListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by SpacialTurtleParser#logicalExpr.
-    def enterLogicalExpr(self, ctx:SpacialTurtleParser.LogicalExprContext):
+    # Enter a parse tree produced by SpacialTurtleParser#logicalOrExpr.
+    def enterLogicalOrExpr(self, ctx:SpacialTurtleParser.LogicalOrExprContext):
         pass
 
-    # Exit a parse tree produced by SpacialTurtleParser#logicalExpr.
-    def exitLogicalExpr(self, ctx:SpacialTurtleParser.LogicalExprContext):
+    # Exit a parse tree produced by SpacialTurtleParser#logicalOrExpr.
+    def exitLogicalOrExpr(self, ctx:SpacialTurtleParser.LogicalOrExprContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#logicalAndExpr.
+    def enterLogicalAndExpr(self, ctx:SpacialTurtleParser.LogicalAndExprContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#logicalAndExpr.
+    def exitLogicalAndExpr(self, ctx:SpacialTurtleParser.LogicalAndExprContext):
         pass
 
 

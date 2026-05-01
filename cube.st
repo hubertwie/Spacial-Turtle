@@ -1,4 +1,4 @@
-let a = 2
+int a = 2
 pen down
 
 face { move a turnY 90 move a turnY 90 move a turnY 90 move a turnY 90 }

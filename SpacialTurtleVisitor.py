@@ -124,8 +124,13 @@ class SpacialTurtleVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SpacialTurtleParser#logicalExpr.
-    def visitLogicalExpr(self, ctx:SpacialTurtleParser.LogicalExprContext):
+    # Visit a parse tree produced by SpacialTurtleParser#logicalOrExpr.
+    def visitLogicalOrExpr(self, ctx:SpacialTurtleParser.LogicalOrExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SpacialTurtleParser#logicalAndExpr.
+    def visitLogicalAndExpr(self, ctx:SpacialTurtleParser.LogicalAndExprContext):
         return self.visitChildren(ctx)
 
 

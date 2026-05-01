@@ -6,6 +6,7 @@ class Type(Enum):
     FLOAT = 2
     BOOL = 3
     VOID = 4
+    STRING = 5
 
 class Symbol:
     def __init__(self, name: str, typ: Type, line: int, column: int):
