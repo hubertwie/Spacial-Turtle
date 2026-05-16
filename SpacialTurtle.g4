@@ -18,6 +18,8 @@ statement
     | returnStmt
     | printStmt
     | exprStmt
+    | breakStmt     
+    | continueStmt
     ;
 
 faceStatement
@@ -30,6 +32,8 @@ faceStatement
     | returnStmt
     | printStmt
     | exprStmt
+    | breakStmt     
+    | continueStmt
     ;
 
 command
@@ -71,10 +75,12 @@ whileStmt : WHILE '(' expr ')' block ;
 
 forStmt : FOR '(' (declaration | assignStmt)? ';' expr? ';' assignStmt? ')' block ;
 
-funcDef : FUNC ID '(' paramList? ')' '{' statement* '}' ;
+funcDef : FUNC ID '(' typedParamList? ')' (':' varType)? '{' statement* '}' ;
 returnStmt : RETURN expr? ;
-paramList : ID (',' ID)* ;
-
+typedParamList : paramWithType (',' paramWithType)* ;
+paramWithType : ID ':' varType ;
+breakStmt : BREAK ';'? ;     
+continueStmt : CONTINUE ';'? ;
 variableRef
     : PARENT '::' variableRef
     | ID
@@ -97,7 +103,7 @@ additiveExpr
     ;
 
 multiplicativeExpr
-    : unaryExpr ( (MUL | DIV) unaryExpr )*
+    : unaryExpr ( (MUL | DIV | IDIV | MOD) unaryExpr )*
     ;
 
 unaryExpr
@@ -107,12 +113,12 @@ unaryExpr
 
 primaryExpr
     : NUMBER
+    | funcCall
     | variableRef
     | TRUE
     | FALSE
     | STRING
     | LPAREN expr RPAREN
-    | funcCall
     | varType '(' expr ')'
     ;
 
@@ -131,6 +137,8 @@ DOWN   : 'down';
 FACE   : 'face';
 EXPORT : 'export';
 PRINT  : 'print';
+BREAK  : 'break';
+CONTINUE : 'continue';
 
 PARENT  : 'parent';
 INT_K   : 'int';
@@ -159,9 +167,12 @@ PLUS  : '+';
 MINUS : '-';
 MUL   : '*';
 DIV   : '/';
+IDIV  : '//';
+MOD   : '%';
 LPAREN: '(';
 RPAREN: ')';
 COMMA : ',';
+
 
 ID : [a-zA-Z_][a-zA-Z_0-9]*;
 NUMBER : '-'? [0-9]+ ('.' [0-9]+)?;

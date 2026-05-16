@@ -53,7 +53,9 @@ def run_repl(interpreter, app):
                 brace_count -= 1
 
         if brace_count < 0:
-            print("Błąd: Zamknięto za dużo klamerek '}'! Zaczynamy od nowa.")
+            msg = "Błąd: Zamknięto za dużo klamerek '}'! Zaczynamy od nowa."
+            print(msg)
+            app.status.config(text=msg)
             buffer = []
             brace_count = 0
             continue
@@ -73,10 +75,9 @@ def run_repl(interpreter, app):
         tree = parser.program()
 
         if error_listener.real_errors:
-            print("Błąd składniowy wyłapany w locie:")
-            for err in error_listener.real_errors:
-                print("   " + err)
-            print("Wpisz ten blok/linijkę od nowa.")
+            msg = "Błąd składniowy wyłapany w locie:\n" + "\n".join(error_listener.real_errors)
+            print(msg)
+            app.status.config(text=msg[:200]) 
             buffer = []
             brace_count = 0
             continue
@@ -91,33 +92,50 @@ def run_repl(interpreter, app):
                 interpreter.execute_program(tree, app)
                 app.update_visualization(interpreter.turtle)
                 print("wykonano :)")
+                app.status.config(text="Program executed successfully")
             except Exception as e:
-                print(f"Błąd wykonania (Runtime): {e}")
-
+                error_msg = f"Błąd wykonania (Runtime): {e}"
+                print(error_msg)
+                app.status.config(text=error_msg[:200])
             buffer = []
             brace_count = 0
-
 def main():
     if len(sys.argv) > 1:
         filename = sys.argv[1]
         if not os.path.exists(filename):
             print(f"File {filename} not found")
             sys.exit(1)
-        input_stream = FileStream(filename, encoding = 'utf-8')
+        input_stream = FileStream(filename, encoding='utf-8')
         lexer = SpacialTurtleLexer(input_stream)
+        lexer.removeErrorListeners() 
         stream = CommonTokenStream(lexer)
         parser = SpacialTurtleParser(stream)
+        parser.removeErrorListeners()
+        
+        syntax_listener = SyntaxErrorListener()
+        parser.addErrorListener(syntax_listener)
+        
         tree = parser.program()
-
+        
+        if syntax_listener.real_errors:
+            for err in syntax_listener.real_errors:
+                print(err)
+            sys.exit(1)
+        
         symbol_table = SymbolTable()
         first_pass = FirstPassListener(symbol_table)
         walker = ParseTreeWalker()
-        walker.walk(first_pass, tree)
-
+        try:
+            walker.walk(first_pass, tree)
+        except Exception as e:
+            print(e)
+            sys.exit(1)
+        
         turtle = Turtle3D()
         interpreter = SpacialTurtleInterpreter(turtle, symbol_table)
         app = TurtleVisualization(interpreter)
         app.load_program(tree)
+        app.after(500, app.start_animation)
         app.mainloop()
     else:
         turtle = Turtle3D()
@@ -126,7 +144,6 @@ def main():
         app = TurtleVisualization(interpreter)
         app.after(100, lambda: run_repl(interpreter, app))
         app.mainloop()
-
 
 if __name__ == "__main__":
     main()

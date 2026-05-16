@@ -104,8 +104,23 @@ class SpacialTurtleVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SpacialTurtleParser#paramList.
-    def visitParamList(self, ctx:SpacialTurtleParser.ParamListContext):
+    # Visit a parse tree produced by SpacialTurtleParser#typedParamList.
+    def visitTypedParamList(self, ctx:SpacialTurtleParser.TypedParamListContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SpacialTurtleParser#paramWithType.
+    def visitParamWithType(self, ctx:SpacialTurtleParser.ParamWithTypeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SpacialTurtleParser#breakStmt.
+    def visitBreakStmt(self, ctx:SpacialTurtleParser.BreakStmtContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SpacialTurtleParser#continueStmt.
+    def visitContinueStmt(self, ctx:SpacialTurtleParser.ContinueStmtContext):
         return self.visitChildren(ctx)
 
 

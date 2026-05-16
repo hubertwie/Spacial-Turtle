@@ -179,12 +179,39 @@ class SpacialTurtleListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by SpacialTurtleParser#paramList.
-    def enterParamList(self, ctx:SpacialTurtleParser.ParamListContext):
+    # Enter a parse tree produced by SpacialTurtleParser#typedParamList.
+    def enterTypedParamList(self, ctx:SpacialTurtleParser.TypedParamListContext):
         pass
 
-    # Exit a parse tree produced by SpacialTurtleParser#paramList.
-    def exitParamList(self, ctx:SpacialTurtleParser.ParamListContext):
+    # Exit a parse tree produced by SpacialTurtleParser#typedParamList.
+    def exitTypedParamList(self, ctx:SpacialTurtleParser.TypedParamListContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#paramWithType.
+    def enterParamWithType(self, ctx:SpacialTurtleParser.ParamWithTypeContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#paramWithType.
+    def exitParamWithType(self, ctx:SpacialTurtleParser.ParamWithTypeContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#breakStmt.
+    def enterBreakStmt(self, ctx:SpacialTurtleParser.BreakStmtContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#breakStmt.
+    def exitBreakStmt(self, ctx:SpacialTurtleParser.BreakStmtContext):
+        pass
+
+
+    # Enter a parse tree produced by SpacialTurtleParser#continueStmt.
+    def enterContinueStmt(self, ctx:SpacialTurtleParser.ContinueStmtContext):
+        pass
+
+    # Exit a parse tree produced by SpacialTurtleParser#continueStmt.
+    def exitContinueStmt(self, ctx:SpacialTurtleParser.ContinueStmtContext):
         pass
 
 
